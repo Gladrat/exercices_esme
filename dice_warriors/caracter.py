@@ -1,6 +1,8 @@
 from dice import *
 
 class Caracter:
+    _type = "Caracter"
+    
     def __init__(self, car_name, car_max_hp, car_attack, car_defense, car_dice):
         self._name = car_name
         self._max_hp = car_max_hp
@@ -15,42 +17,63 @@ class Caracter:
     def getDice(self):
         return self._dice
 
+    def get_name(self):
+        return self._name
+
     def wound(self, damages):
         self._hp = self._hp - damages
 
     def isAlive(self):
         if (self._hp > 0):
-            print("Alive !")
+            # print("Alive !")
             return True
         else:
-            print(f"Dead noob {self._name}")
+            # print(f"Dead noob {self._name}")
             return False
         
     def showHealthBar(self):
+        if (self._hp < 0):
+            self._hp = 0
         missing_hp = self._max_hp - self._hp
-        print(f"hp: {self._hp}")
-        print(f"missing hp: {missing_hp}")
+        # print(f"hp: {self._hp}")
+        # print(f"missing hp: {missing_hp}")
         health_bar = f"{'●'*self._hp}{'○'*missing_hp} {self._hp}/{self._max_hp}hp"
         print(health_bar)
 
-    def attack(self):
-        damages = 0
-        damages = damages + self._attack
-        damages = damages + self._dice.roll()
-        print(f"BOUM ! {damages}")
+    def attack(self, target):
+        if (self.isAlive()):
+            damages = 0
+            damages = damages + self._attack
+            result = self._dice.roll()
+            damages = damages + result
+            print(f"{self._type} {self._name} attack {target.get_name()} with {damages} damages : {self._attack} (attack) + {result} (roll)")
+            target.defense(damages, self)
 
-    def defense(self, damages):
-        damages = damages - self._defense
-        damages = damages - self._dice.roll()
-        self.wound(damages)
+    def defense(self, damages, attacker):
+        wounds = damages - self._defense
+        result = self._dice.roll()
+        wounds = wounds - result
+        if (wounds < 0):
+            wounds = 0
+        print(f"{self._type} {self._name} take {wounds} wounds from {attacker.get_name()} : {damages} (damages) - {self._defense} (defense) - {result} (roll)")
+        self.wound(wounds)
+        self.showHealthBar()
 
     # def last_breath(self):
     #     pass
 
+class Warrior(Caracter):
+    _type = "Warrior"
+
+class Mage(Caracter):
+    _type = "Mage"
+
 if __name__ == "__main__":
-    a_dice = Dice(10)
-    cheater_dice = RiggedDice(10)
-    car1 = Caracter("Julie", 20, 8, 3, a_dice)
-    car2 = Caracter("Constance", 10, 12, 3, a_dice)
-    print(car1)
-    print(car2)  
+    a_dice = Dice(6)
+    
+    car1 = Mage("Oliver", 20, 8, 3, a_dice)
+    car2 = Warrior("Elsa", 20, 8, 3, a_dice)
+    
+    while(car1.isAlive() and car2.isAlive()):
+        car1.attack(car2)
+        car2.attack(car1)
