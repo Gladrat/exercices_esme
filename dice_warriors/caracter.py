@@ -38,7 +38,6 @@ class Caracter:
         damages = damages + self._attack
         damages = damages + self._dice.roll()
         print(f"BOUM ! {damages}")
-        return damages
 
     def defense(self, damages):
         damages = damages - self._defense
@@ -51,18 +50,7 @@ class Caracter:
 if __name__ == "__main__":
     a_dice = Dice(10)
     cheater_dice = RiggedDice(10)
-    # name = input("Player 1 name ? ")
-    car1 = Caracter("Julie", 20, 8, 3, cheater_dice)
-    # name = input("Player 2 name ? ")
-    car2 = Caracter("Constance", 10, 12, 3, cheater_dice)
+    car1 = Caracter("Julie", 20, 8, 3, a_dice)
+    car2 = Caracter("Constance", 10, 12, 3, a_dice)
     print(car1)
     print(car2)  
-    
-    while (car1.isAlive() and car2.isAlive()):
-        damages = car2.attack()
-        car1.defense(damages)
-        car1.showHealthBar()
-        
-        damages = car1.attack()
-        car2.defense(damages)
-        car2.showHealthBar()
