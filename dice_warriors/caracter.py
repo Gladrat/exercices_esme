@@ -47,7 +47,7 @@ class Caracter:
         print(health_bar)
 
     def compute_damages(self, result):
-        damages = 10
+        damages = 0
         damages = damages + self._attack
         damages = damages + result
         return damages
@@ -56,7 +56,7 @@ class Caracter:
         if (self.isAlive()):
             result = self._dice.roll()
             damages = self.compute_damages(result)
-            print(f"> {self._type} {self._name} attack {target.get_name()} with {damages} damages : {self._attack} (attack) + {result} (roll)")
+            print(f"► {self._type} {self._name} attack {target.get_name()} with {damages} damages : {self._attack} (attack) + {result} (roll)")
             target.defense(damages, self)
 
     def defense(self, damages, attacker):
@@ -65,7 +65,7 @@ class Caracter:
         wounds = wounds - result
         if (wounds < 0):
             wounds = 0
-        print(f"< {self._type} {self._name} take {wounds} wounds from {attacker.get_name()} : {damages} (damages) - {self._defense} (defense) - {result} (roll)")
+        print(f"◄ {self._type} {self._name} take {wounds} wounds from {attacker.get_name()} : {damages} (damages) - {self._defense} (defense) - {result} (roll)")
         self.wound(wounds)
         self.showHealthBar()
 
@@ -78,11 +78,13 @@ class Warrior(Caracter):
     def compute_damages(self, result):
         damages = super().compute_damages(result)
         damages = damages + 3
-        print("> Coup de hache ! (3)")
+        print("► Coup de hache ! (3)")
         return damages
 
 class Mage(Caracter):
     _type = "Mage"
+    
+    # Bonus de défense de 3
     
 class Thief(Caracter):
     _type = "Thief"
